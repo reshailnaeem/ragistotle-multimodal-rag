@@ -1,0 +1,16 @@
+groq
+langchain-groq
+llama-index-core
+llama-index-embeddings-huggingface
+llama-index-llms-groq
+llama-index-readers-file
+llama-index-vector-stores-qdrant
+openpyxl
+pandas
+pillow
+pytubefix
+python-dotenv
+qdrant-client
+scrapegraphai
+streamlit
+validators
