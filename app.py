@@ -39,13 +39,13 @@ from helpers import (
 # Initialize settings
 load_dotenv()
 
-Settings.llm = Groq(model='gemma2-9b-it', api_key=os.getenv('GROQ_API_KEY'), max_tokens=1200)
+Settings.llm = Groq(model='llama-3.3-70b-versatile', api_key=os.getenv('GROQ_API_KEY'), max_tokens=1200)
 embed_model = HuggingFaceEmbedding(
     model_name='sentence-transformers/all-MiniLM-L12-v2',
     cache_folder=TRANSFORMERS_CACHE
 )
 llm = ChatGroq(
-    model='gemma2-9b-it',
+    model='llama-3.3-70b-versatile',
     api_key=os.getenv('GROQ_API_KEY'),
     max_tokens=800,
 )
@@ -173,7 +173,7 @@ with st.container():
     elif website_link:
         graph_config = {
             "llm": {
-                "model": "groq/gemma-7b-it",
+                "model": "groq/gemma2-9b-it",
                 "api_key": os.getenv('GROQ_API_KEY'),
                 "temperature": 0.3
             },
