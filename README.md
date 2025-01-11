@@ -17,7 +17,7 @@ Why _"RAGistotle"_? Because, like Aristotle, who mastered many fields, RAGistotl
 - [`pytubefix`](https://github.com/JuanBindez/pytubefix) for YouTube links
 - [Streamlit](https://streamlit.io/) for the UI
 
-As for the Groq models used, I use [Gemma 2.9B IT](https://huggingface.co/google/gemma-2-9b-it) for general querying, [Whisper Large v3 Turbo](https://huggingface.co/openai/whisper-large-v3-turbo) for audio, and [Llama 3.2 90B Vision](https://huggingface.co/meta-llama/Llama-3.2-90B-Vision) for images.
+As for the Groq models used, I use [Llama 3.3 70B](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct) for general querying, [Whisper Large v3 Turbo](https://huggingface.co/openai/whisper-large-v3-turbo) for audio, and [Llama 3.2 90B Vision](https://huggingface.co/meta-llama/Llama-3.2-90B-Vision) for images.
 
 ## Table of Contents
 - [Features](#features)
