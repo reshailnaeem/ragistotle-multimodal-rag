@@ -2,6 +2,7 @@ import inspect
 import os
 import shutil
 import sys
+import requests
 
 import asyncio
 import nest_asyncio
@@ -9,6 +10,7 @@ import nest_asyncio
 import streamlit as st
 
 from dotenv import load_dotenv
+from io import BytesIO
 from langchain_groq import ChatGroq
 from llama_index.core import (
     Document,
@@ -173,7 +175,7 @@ with st.container():
     elif website_link:
         graph_config = {
             "llm": {
-                "model": "groq/gemma2-9b-it",
+                "model": "groq/llama3-8b-8192",
                 "api_key": os.getenv('GROQ_API_KEY'),
                 "temperature": 0.3
             },
@@ -220,6 +222,21 @@ with st.container():
 # Query the data
 st.subheader("Ask your question. 🔍")
 question = st.text_area("Enter your question...")
+question_audio = st.audio_input("Record your question...")
+
+# Transcribe audio question
+if question_audio:
+    processing_placeholder = st.empty()
+    processing_placeholder.write("Processing your recorded question...")
+
+    with open(os.path.join(TEMP_PATH, "question_audio.wav"), "wb") as f:
+        f.write(question_audio.read())
+    
+    question = transcribe_audio(os.path.join(TEMP_PATH, "question_audio.wav"), show_message=False)
+    processing_placeholder.empty()
+
+    st.write("Transcribed Question:")
+    st.write(f'"{question}"' if question else "Could not transcribe the audio. Please try again.")
 
 if question:
     querying_placeholder = st.empty()
@@ -266,6 +283,37 @@ if question:
         with st.expander("Execution info"):
             graph_exec_info = smart_scraper_graph.get_execution_info()
             st.write(prettify_exec_info(graph_exec_info))
+
+    if st.button("🔊 Generate Audio Response"):
+        if response_text:
+            try:
+                tts_placeholder = st.empty()         
+                tts_placeholder.write("Generating audio response...")
+
+                response = requests.post(
+                    "https://api.kokorotts.com/v1/audio/speech",
+                    json={
+                        "model": "kokoro",
+                        "input": response_text,
+                        "voice": "af_sky",
+                        "response_format": "mp3",
+                        "speed": 1.0,
+                    }
+                )
+                if response.status_code == 200:
+                    audio_stream = BytesIO(response.content)
+                    st.audio(audio_stream, format="audio/mp3")
+                    tts_placeholder.empty()
+                else:
+                    st.error(f"Error: Received status code {response.status_code}")
+                    st.error(f"Details: {response.json().get('error', 'No details available')}")
+            
+            except requests.exceptions.RequestException as e:
+                st.error("A network error occurred. Please check your connection and try again.")
+                st.error(f"Details: {e}")
+            except Exception as e:
+                st.error("An unexpected error occurred. Please try again.")
+                st.error(f"Details: {e}")
 
 # Settings
 st.subheader("Settings")
