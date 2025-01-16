@@ -15,9 +15,10 @@ Why _"RAGistotle"_? Because, like Aristotle, who mastered many fields, RAGistotl
 - [all-MiniLM-L12-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2) for sentence embedding
 - [Pillow](https://python-pillow.org/) for converting images to Base64 encoding for an LLM-friendly format
 - [`pytubefix`](https://github.com/JuanBindez/pytubefix) for YouTube links
+- [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) wrapped in an API by [remsky](https://github.com/remsky/Kokoro-FastAPI) for TTS
 - [Streamlit](https://streamlit.io/) for the UI
 
-As for the Groq models used, I use [Llama 3.3 70B](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct) for general querying, [Whisper Large v3 Turbo](https://huggingface.co/openai/whisper-large-v3-turbo) for audio, and [Llama 3.2 90B Vision](https://huggingface.co/meta-llama/Llama-3.2-90B-Vision) for images.
+As for the Groq models used, I use [Llama 3.3 70B](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct) for general querying, [Whisper Large v3 Turbo](https://huggingface.co/openai/whisper-large-v3-turbo) for audio, and [Llama 3.2 90B Vision](https://huggingface.co/meta-llama/Llama-3.2-90B-Vision) for images. I've also added support for voice input and output to enhance the user experience. Now, you can interact with the application using your voice.
 
 ## Table of Contents
 - [Features](#features)
