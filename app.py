@@ -1,4 +1,5 @@
 import inspect
+import json
 import os
 import shutil
 import sys
@@ -49,7 +50,7 @@ embed_model = HuggingFaceEmbedding(
 llm = ChatGroq(
     model='llama-3.3-70b-versatile',
     api_key=os.getenv('GROQ_API_KEY'),
-    max_tokens=800,
+    max_tokens=1200,
 )
 
 # Some PandasAI thing to not use their training data
@@ -228,7 +229,7 @@ question_audio = st.audio_input("Record your question...")
 if question_audio:
     processing_placeholder = st.empty()
     processing_placeholder.write("Processing your recorded question...")
-
+    
     with open(os.path.join(TEMP_PATH, "question_audio.wav"), "wb") as f:
         f.write(question_audio.read())
     
@@ -237,6 +238,11 @@ if question_audio:
 
     st.write("Transcribed Question:")
     st.write(f'"{question}"' if question else "Could not transcribe the audio. Please try again.")
+
+    try:
+        os.unlink(os.path.join(TEMP_PATH, "question_audio.wav"))
+    except OSError:
+        st.error("Error deleting temporary audio file.")
 
 if question:
     querying_placeholder = st.empty()
@@ -277,7 +283,11 @@ if question:
 
     elif website_link:
         result = smart_scraper_graph.run()
-        st.write(result)
+        try:
+            result_json = json.dumps(result, ensure_ascii=False)
+            st.json(result_json)
+        except (TypeError, ValueError) as e:
+            st.error(f"Error serializing JSON: {e}")
         querying_placeholder.empty()
 
         with st.expander("Execution info"):
@@ -306,8 +316,7 @@ if question:
                     tts_placeholder.empty()
                 else:
                     st.error(f"Error: Received status code {response.status_code}")
-                    st.error(f"Details: {response.json().get('error', 'No details available')}")
-            
+                    st.error(f"Details: {response.json().get('error', 'No details available')}")          
             except requests.exceptions.RequestException as e:
                 st.error("A network error occurred. Please check your connection and try again.")
                 st.error(f"Details: {e}")
@@ -322,3 +331,4 @@ delete_button = st.button("Delete Vector Store")
 if delete_button:
     shutil.rmtree(VECTOR_STORE_PATH)
     st.success("Deleted Vector Store successfully.")
+    
