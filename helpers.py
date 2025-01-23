@@ -54,11 +54,11 @@ def get_whisper_model():
         st.error(f"Error loading transcription model: {e}")
         st.stop()
 
-def transcribe_audio(audio_file_path):
+def transcribe_audio(audio_file_path, show_message=True):
     try:
         model = get_whisper_model()
-        st.write("Transcribing audio file...")
-
+        if show_message:
+            st.write("Transcribing audio file...")
         with open(audio_file_path, "rb") as audio_file:
             transcription = client.audio.transcriptions.create(
                 model=model,
@@ -77,8 +77,8 @@ def download_youtube_audio(youtube_link):
     if match:
         video_id = match.group(1)
         try:
-            yt = YouTube(f"https://www.youtube.com/watch?v={video_id}")
-            stream = yt.streams.filter(only_audio=True).first()
+            yt = YouTube(f"https://www.youtube.com/watch?v={video_id}", client='MWEB')
+            stream = yt.streams.get_audio_only()
             if stream is None:
                 st.error("No audio streams available for this video.")
                 return None            
